@@ -1,9 +1,10 @@
 # DataDog Analysis Tool
 
-A comprehensive Python tool for analysing DataDog usage across code repositories. This tool scans TypeScript/JavaScript projects to identify where and what data is being sent to DataDog, providing detailed reports with GitHub integration.
+A comprehensive Python tool for analysing DataDog usage across code repositories. This tool scans TypeScript/JavaScript and C# Unity projects to identify where and what data is being sent to DataDog, providing detailed reports with GitHub integration.
 
 ## Features
 
+- **Multi-language support**: TypeScript/JavaScript (web) and C# (Unity) DataDog SDK detection
 - **Multi-project scanning**: Automatically detects and scans React, Next.js, Unity, and Node.js projects
 - **DataDog usage detection**: Identifies imports, initialisation, RUM actions, error tracking, and logging
 - **Data extraction**: Extracts and categorises data being sent to DataDog
@@ -11,6 +12,7 @@ A comprehensive Python tool for analysing DataDog usage across code repositories
 - **GitHub integration**: Direct links to code locations in GitHub repositories
 - **Export options**: JSON and CSV exports for further analysis
 - **Multi-threaded scanning**: Fast scanning with parallel processing
+- **Extensible architecture**: Easy to add support for additional languages and DataDog SDKs
 
 ## Installation & Setup
 
