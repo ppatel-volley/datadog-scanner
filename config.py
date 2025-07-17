@@ -10,7 +10,7 @@ from dataclasses import dataclass, field
 class ScanConfig:
     """Configuration for scanning parameters."""
     target_directories: List[str] = field(default_factory=list)
-    file_extensions: List[str] = field(default_factory=lambda: ['.ts', '.tsx', '.js', '.jsx'])
+    file_extensions: List[str] = field(default_factory=lambda: ['.ts', '.tsx', '.js', '.jsx', '.cs'])
     ignore_patterns: List[str] = field(default_factory=list)
     context_lines: int = 3
     

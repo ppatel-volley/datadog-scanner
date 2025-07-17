@@ -9,7 +9,7 @@ import fnmatch
 import chardet
 
 from models import DataDogFinding, ProjectInfo, ScanResults
-from datadog_detector import DataDogDetector
+from detectors.detector_factory import DataDogDetectorFactory
 from github_linker import GitHubLinker
 from config import ConfigManager
 
@@ -20,7 +20,7 @@ class CodeScanner:
     def __init__(self, config, github_linker: GitHubLinker):
         self.config = config
         self.github_linker = github_linker
-        self.detector = DataDogDetector(
+        self.detector_factory = DataDogDetectorFactory(
             context_lines=config.scan.context_lines,
             detailed_extraction=config.output.data_extraction_detailed
         )
@@ -164,16 +164,12 @@ class CodeScanner:
             if not file_path.is_file():
                 continue
             
-            # Check file extension
-            if file_path.suffix not in self.config.scan.file_extensions:
+            # Check if any detector can handle this file
+            if not self.detector_factory.get_detector_for_file(str(file_path)):
                 continue
             
             # Check ignore patterns
             if self._should_ignore_file(file_path, project_path):
-                continue
-            
-            # Check if file is likely to contain DataDog usage
-            if not self.detector.is_datadog_related_file(str(file_path)):
                 continue
             
             yield file_path
@@ -222,8 +218,13 @@ class CodeScanner:
             # Extract base GitHub URL for the file (without line number)
             base_github_url = github_url.split('#')[0]
             
+            # Get appropriate detector for this file
+            detector = self.detector_factory.get_detector_for_file(str(file_path))
+            if not detector:
+                return []  # No detector available for this file type
+            
             # Detect DataDog usage
-            findings = self.detector.detect_datadog_usage(
+            findings = detector.detect_datadog_usage(
                 str(file_path),
                 content,
                 project.name,
